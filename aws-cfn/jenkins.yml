@@ -1,0 +1,144 @@
+## ====================
+# Author: R. Alcazar
+# Created: 8/16/2018
+#
+# CREATES AWS RESOURCES NEEDED FOR THE JENKINS CLUSTER
+#
+## ====================
+
+Resources:
+
+  # EC2 INSTANCE FOR JENKINS
+  Jenkins1:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-759bc50a # ubuntu:xenial
+      InstanceType: t2.micro
+      KeyName: ralcazar-aws-nvirginia-2018
+      SecurityGroupIds:
+        - sg-210d2d56 # default security group
+        - sg-6350a715 # jenkins security group
+      SubnetId: subnet-a8732687
+      Tags:
+        - Key: Name
+          Value: Jenkins-1
+        - Key: Platform
+          Value: Ubuntu
+
+      # install docker-ce
+      UserData:
+        Fn::Base64:
+          !Sub |
+              #!/bin/bash -ex
+              sudo apt update && sudo apt upgrade -y && sudo apt install nfs-common -y
+
+              # install docker
+              curl -fsSL get.docker.com -o get-docker.sh
+              sh get-docker.sh
+              sudo usermod -aG docker ubuntu
+
+  Jenkins2:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-759bc50a # ubuntu:xenial
+      InstanceType: t2.micro
+      KeyName: ralcazar-aws-nvirginia-2018
+      SecurityGroupIds:
+        - sg-210d2d56 # default security group
+        - sg-6350a715 # jenkins security group
+      SubnetId: subnet-a8732687
+      Tags:
+        - Key: Name
+          Value: Jenkins-2
+        - Key: Platform
+          Value: Ubuntu
+
+      # install docker-ce
+      UserData:
+        Fn::Base64:
+          !Sub |
+              #!/bin/bash -ex
+              sudo apt update && sudo apt upgrade -y && sudo apt install nfs-common -y
+
+              # install docker
+              curl -fsSL get.docker.com -o get-docker.sh
+              sh get-docker.sh
+              sudo usermod -aG docker ubuntu
+
+  Jenkins3:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-759bc50a # ubuntu:xenial
+      InstanceType: t2.micro
+      KeyName: ralcazar-aws-nvirginia-2018
+      SecurityGroupIds:
+        - sg-210d2d56 # default security group
+        - sg-6350a715 # jenkins security group
+      SubnetId: subnet-a8732687
+      Tags:
+        - Key: Name
+          Value: Jenkins-3
+        - Key: Platform
+          Value: Ubuntu
+
+      # install docker-ce
+      UserData:
+        Fn::Base64:
+          !Sub |
+              #!/bin/bash -ex
+              sudo apt update && sudo apt upgrade -y && sudo apt install nfs-common -y
+
+              # install docker
+              curl -fsSL get.docker.com -o get-docker.sh
+              sh get-docker.sh
+              sudo usermod -aG docker ubuntu
+
+
+  # SHARED NETWORK STORAGE
+  JenkinsVolume:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      FileSystemTags:
+        - Key: Name
+          Value: JenkinsEFS
+
+  # MOUNT
+  JenkinsVolumeTarget:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref JenkinsVolume
+      SubnetId: subnet-a8732687
+      SecurityGroups:
+        - sg-210d2d56 # default security group
+
+  # CLASSIC LOAD BALANCER
+  ElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      LoadBalancerName: JenkinsELB
+      Scheme: internal
+      Subnets:
+        - subnet-a8732687
+      Instances:
+        - !Ref Jenkins1
+        - !Ref Jenkins2
+        - !Ref Jenkins3
+      Listeners:
+        - LoadBalancerPort: 80
+          InstancePort: 80
+          Protocol: HTTP
+        - LoadBalancerPort: 8080
+          InstancePort: 8080
+          Protocol: HTTP
+      HealthCheck:
+        Target: "HTTP:80/index.html"
+        HealthyThreshold: 3
+        UnhealthyThreshold: 5
+        Interval: 30
+        Timeout: 3
+
+  
+
+
+
+
