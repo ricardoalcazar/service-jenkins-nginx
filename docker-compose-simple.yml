@@ -1,0 +1,40 @@
+version: "3.2"
+
+# SERVICES
+services:
+
+  # NGINX
+  jenkins-nginx:
+    image: "ricardoalcazar/nginx:latest"
+    ports:
+      - "80:80"
+    networks:
+      - jenkins-nginx-simple-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  # JENKINS MASTER
+  jenkins:
+    image: "ricardoalcazar/jenkins:lts"
+    ports:
+      - "50000:50000"
+    volumes:
+      - "jenkins:/var/jenkins_home"
+    networks:
+      - jenkins-nginx-simple-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+# NETWORKS
+networks:
+  jenkins-nginx-simple-net:
+
+# VOLUMES
+volumes:
+  jenkins:
+    external:
+      name: jenkins-nginx-simple
+
+
