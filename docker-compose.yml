@@ -10,9 +10,6 @@ services:
       - "80:80"
     networks:
       - jenkins-nginx-simple-net
-    deploy:
-      placement:
-        constraints: [node.role == manager]
 
   # JENKINS MASTER
   jenkins:
@@ -23,9 +20,6 @@ services:
       - "jenkins:/var/jenkins_home"
     networks:
       - jenkins-nginx-simple-net
-    deploy:
-      placement:
-        constraints: [node.role == manager]
 
 # NETWORKS
 networks:
