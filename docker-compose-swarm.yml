@@ -11,6 +11,7 @@ services:
       - jenkins-nginx
     environment:
       - BALANCE=leastconn
+      - ADDITIONAL_SERVICES=project_dir:jenkins-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
