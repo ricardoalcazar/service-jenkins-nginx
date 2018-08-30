@@ -14,7 +14,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 8085:80
+      - 2375:2375
     networks:
       - jenkins-proxy-network
     deploy:
