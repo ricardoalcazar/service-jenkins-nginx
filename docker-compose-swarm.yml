@@ -35,10 +35,10 @@ services:
     networks:
       - jenkins-proxy-network
     deploy:
-      mode: global
+      #mode: global
       endpoint_mode: dnsrr
-      #placement:
-      #  constraints: [node.role == worker]  
+      placement:
+        constraints: [node.role == worker]  
 
   # NGINX
   jenkins-nginx:
