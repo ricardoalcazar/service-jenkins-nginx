@@ -3,22 +3,6 @@ version: "3.2"
 # SERVICES
 services:
 
-  # PROXY
-  jenkins-proxy:
-    image: "ricardoalcazar/jenkins-proxy:latest"
-    depends_on:
-      - jenkins
-    command: "-i"
-    volumes: 
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      - jenkins-proxy-network
-    deploy:
-      #mode: global
-      #endpoint_mode: dnsrr
-      placement:
-        constraints: [node.role == worker]  
-
   # NGINX
   jenkins-nginx:
     image: "ricardoalcazar/nginx:latest"
