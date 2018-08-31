@@ -3,40 +3,19 @@ version: "3.2"
 # SERVICES
 services:
 
-  # LOAD BALANCER
-  jenkins-loadbalancer:
-    image: dockercloud/haproxy
-    depends_on:
-      - jenkins
-      - jenkins-nginx
-    environment:
-      - BALANCE=roundrobin
-      - ADDITIONAL_SERVICES=project_dir:jenkins-proxy
-    ports:
-      - "2375:2375"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      - jenkins-proxy-network
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-
   # PROXY
   jenkins-proxy:
     image: "ricardoalcazar/jenkins-proxy:latest"
     depends_on:
       - jenkins
     command: "-i"
-    environment:
-      - SERVICE_PORTS=2375
     volumes: 
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - jenkins-proxy-network
     deploy:
       #mode: global
-      endpoint_mode: dnsrr
+      #endpoint_mode: dnsrr
       placement:
         constraints: [node.role == worker]  
 
