@@ -11,28 +11,27 @@ services:
     ports:
       - "80:80"
     networks:
-      - jenkins-proxy-network
+      - jenkins-nginx-service-network
     deploy:
       placement:
         constraints: [node.role == manager]      
 
   # JENKINS MASTER
   jenkins:
-    image: "ricardoalcazar/jenkins:lts-plugins"
+    image: "ricardoalcazar/jenkins:lts"
     ports:
-      #- "8080:8080"
       - "50000:50000"
     volumes:
       - "jenkins:/var/jenkins_home"
     networks:
-      - jenkins-proxy-network
+      - jenkins-nginx-service-network
     deploy:
       placement:
         constraints: [node.role == manager]
 
 # NETWORKS
 networks:
-  jenkins-proxy-network:
+  jenkins-nginx-service-network:
 
 # VOLUMES
 volumes:
