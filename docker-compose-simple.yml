@@ -6,13 +6,12 @@ services:
   # NGINX
   jenkins-nginx:
     image: "ricardoalcazar/nginx:latest"
+    depends_on:
+      - jenkins
     ports:
       - "80:80"
     networks:
-      - jenkins-nginx-simple-net
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - jenkins-nginx-service-network
 
   # JENKINS MASTER
   jenkins:
@@ -22,19 +21,16 @@ services:
     volumes:
       - "jenkins:/var/jenkins_home"
     networks:
-      - jenkins-nginx-simple-net
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - jenkins-nginx-service-network
 
 # NETWORKS
 networks:
-  jenkins-nginx-simple-net:
+  jenkins-nginx-service-network:
 
 # VOLUMES
 volumes:
   jenkins:
     external:
-      name: jenkins-nginx-simple
+      name: jenkins-nginx-service
 
 
