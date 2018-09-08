@@ -5,7 +5,7 @@ services:
 
   # NGINX
   jenkins-nginx:
-    image: "ricardoalcazar/nginx:v2"
+    image: "ricardoalcazar/nginx:latest"
     depends_on:
       - jenkins
       - cadvisor
