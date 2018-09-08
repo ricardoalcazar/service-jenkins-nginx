@@ -34,7 +34,7 @@ services:
   cadvisor:
     image: "google/cadvisor"
     ports:
-      - "8082:8080"
+      - "8080:8080"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
