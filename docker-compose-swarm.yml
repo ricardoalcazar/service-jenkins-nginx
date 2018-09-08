@@ -5,9 +5,10 @@ services:
 
   # NGINX
   jenkins-nginx:
-    image: "ricardoalcazar/nginx:latest"
+    image: "ricardoalcazar/nginx:v2"
     depends_on:
       - jenkins
+      - cadvisor
     ports:
       - "80:80"
     networks:
@@ -40,6 +41,8 @@ services:
       - "/sys:/sys:ro"
       - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
+    networks:
+      - jenkins-nginx-service-network
 
 # NETWORKS
 networks:
